@@ -1,38 +1,67 @@
-var Engine = Matter.Engine,
-Render = Matter.Render,
-Runner = Matter.Runner,
-Body = Matter.Body,
-Events = Matter.Events,
-MouseConstraint = Matter.MouseConstraint,
-Mouse = Matter.Mouse,
-Composite = Matter.Composite,
-Bodies = Matter.Bodies;
+const Engine = Matter.Engine,
+    Render = Matter.Render,
+    Runner = Matter.Runner,
+    Body = Matter.Body,
+    Events = Matter.Events,
+    MouseConstraint = Matter.MouseConstraint,
+    Mouse = Matter.Mouse,
+    Composite = Matter.Composite,
+    Bodies = Matter.Bodies;
 
+const engine = Engine.create();
 
-// create an engine
-var engine = Engine.create();
-
-
-// create a renderer
-var render = Render.create({
+const render = Render.create({
     element: document.body,
     engine: engine
 });
 
-// create two boxes and a ground
-var bodyA = Bodies.rectangle(100, 200, 50, 50, { isStatic: true, render: { fillStyle: '#060a19' } }),
+let circle_x = 450
+let circle_y = 100
+
+let keyX = 300
+let keyY = 200
+
+function moveObject(x, y) {
+    Body.setPosition(bodyC, {
+        x: bodyC.position.x + x,
+        y: bodyC.position.y + y
+    });
+
+    Render.run(render);
+}
+
+window.addEventListener('keypress', (event) => {
+    switch (event.key) {
+        case 'd':
+            moveObject(5, 0)
+            break
+        case 'w':
+            moveObject(0, -50)
+            break
+        case 'a':
+            moveObject(-5, 0)
+            break
+        case 's':
+            moveObject(0, 5)
+            break
+    }
+})
+
+const bodyA = Bodies.rectangle(100, 200, 50, 50, { isStatic: false, render: { fillStyle: '#fffff' } }),
     bodyB = Bodies.rectangle(200, 200, 50, 50),
-    bodyC = Bodies.rectangle(300, 200, 50, 50),
+    bodyC = Bodies.rectangle(keyX, keyY, 50, 50),
     bodyD = Bodies.rectangle(400, 200, 50, 50),
     bodyE = Bodies.rectangle(550, 200, 50, 50),
     bodyF = Bodies.rectangle(700, 200, 50, 50),
-    bodyG = Bodies.circle(400, 100, 25, { render: { fillStyle: '#060a19' } }),
+    bodyG = Bodies.circle(circle_x, circle_y, 25, { render: { fillStyle: '#FFFF00' } }),  //yellow hex
+
     partA = Bodies.rectangle(600, 200, 120, 50, { render: { fillStyle: '#060a19' } }),
     partB = Bodies.rectangle(660, 200, 50, 190, { render: { fillStyle: '#060a19' } }),
+
     compound = Body.create({
-            parts: [partA, partB],
-            isStatic: true
-        });
+        parts: [partA, partB],
+        isStatic: true
+    });
 
 // add all of the bodies to the world
 Composite.add(engine.world, [bodyA, bodyB, bodyC, bodyD, bodyE, bodyF, bodyG, compound]);
@@ -44,11 +73,10 @@ Composite.add(engine.world, [
     Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
 ]);
 
-// run the renderer
+Mouse.create()
+
 Render.run(render);
 
-// create runner
-var runner = Runner.create();
+const runner = Runner.create();
 
-// run the engine
 Runner.run(runner, engine);
